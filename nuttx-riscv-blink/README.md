@@ -9,18 +9,25 @@ Run blink example on NuttX RTOS.
 - [NuttX](https://github.com/apache/nuttx) & [NuttX-apps](https://github.com/apache/nuttx-apps)
 - [CMake](https://cmake.org/download/)
 - [Swift 6](https://swift.org/download/)
+- [QEMU](https://www.qemu.org/)
+- [RISC-V GNU Toolchain](https://github.com/riscv/riscv-gnu-toolchain)
 
 ## How to build
 
 - **Get nuttx and nuttx-apps**
 ```bash
-git clone --depth=1 --recursive https://github.com/apache/nuttx -b nuttx-12.5.1
-git clone --depth=1 --recursive https://github.com/apache/nuttx-apps -b nuttx-12.5.1 apps
+git clone --depth=1 --recursive https://github.com/apache/nuttx -b nuttx-12.7.0
+git clone --depth=1 --recursive https://github.com/apache/nuttx-apps -b nuttx-12.7.0 apps
 # optional (kconfig-frontends) build or use your distro pkg-manager
 git clone  --depth=1 https://bitbucket.org/nuttx/tools.git
 ```
 
 ## How to run
+
+```bash
+cmake -B build -GNinja -DCMAKE_TOOLCHAIN__FILE=cmake/riscv32.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
 
 - **Output**
 ```bash
