@@ -31,9 +31,11 @@ jobs:
 
       - name: Install ${{ matrix.swift }}
         run: |
+          sudo rm /usr/.local/bin/swift*
           wget -q https://download.swift.org/development/ubuntu2404/${{ matrix.swift }}/${{ matrix.swift }}-ubuntu24.04.tar.gz
           tar xzf ${{ matrix.swift }}-ubuntu24.04.tar.gz
-          sudo cp -r ${{ matrix.swift }}-ubuntu24.04/usr/ /usr/local/
+          export PATH="$PATH:`pwd`/${{ matrix.swift }}-ubuntu24.04/usr/bin/"
+          echo "PATH=$PATH" >> $GITHUB_ENV
           swiftc --version
 
       - name: Install Build tools
