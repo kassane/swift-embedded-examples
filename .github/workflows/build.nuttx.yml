@@ -1,0 +1,59 @@
+name: Build NuttX Examples
+
+on:
+  push:
+    # branches: ["main"]
+  pull_request:
+    # branches: ["main"]
+  schedule:
+    # Build on Mondays at 9am PST every week
+    - cron:  '0 17 * * 1'
+
+jobs:
+  build-zephyr:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        example: [nuttx-riscv-blink]
+        swift: [swift-DEVELOPMENT-SNAPSHOT-2024-12-04-a]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up CMake + Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+
+      - name: Install ${{ matrix.swift }}
+        run: |
+          wget -q https://download.swift.org/development/ubuntu2404/${{ matrix.swift }}/${{ matrix.swift }}-ubuntu24.04.tar.gz
+          tar xzf ${{ matrix.swift }}-ubuntu24.04.tar.gz
+          export PATH="$PATH:`pwd`/${{ matrix.swift }}-ubuntu24.04/usr/bin/"
+          echo "PATH=$PATH" >> $GITHUB_ENV
+          swiftc --version
+
+      - name: Install kconfig-frontends
+        run: |
+          sudo apt -y update
+          sudo apt -y install kconfig-frontends
+      
+      - name: Install RISC-V toolchain
+        run: |
+          mkdir -p riscv-none-elf-gcc && \
+          curl -s -L "https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v13.2.0-2/xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz" \
+          | tar -C riscv-none-elf-gcc --strip-components 1 -xz
+          export PATH="$PATH:`pwd`/riscv-none-elf-gcc/bin/"
+          echo "PATH=$PATH" >> $GITHUB_ENV
+        
+      - name: Config ${{ matrix.example }}
+        working-directory: ${{ matrix.example }}
+        run: cmake -B build -GNinja -DBOARD_CONFIG=rv-virt:leds_swift
+
+      - name: Build ${{ matrix.example }}
+        working-directory: ${{ matrix.example }}
+        run: cmake --build build
