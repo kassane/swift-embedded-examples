@@ -6,8 +6,8 @@ project(blink
     LANGUAGES Swift
 )
 
-if("${CMAKE_Swift_COMPILER_VERSION}" VERSION_LESS 6.0)
-    message(FATAL_ERROR "Swift 6.0 or later is required")
+if("${CMAKE_Swift_COMPILER_VERSION}" VERSION_LESS 6.1)
+    message(FATAL_ERROR "Swift 6.1 or later is required")
 endif()
 
 if(POLICY CMP0169)
@@ -29,7 +29,7 @@ include(FetchContent)
 FetchContent_Declare(
     apps
     GIT_REPOSITORY https://github.com/apache/nuttx-apps.git
-    GIT_TAG nuttx-12.7.0-RC0
+    GIT_TAG nuttx-12.7.0
     SOURCE_DIR ${CMAKE_BINARY_DIR}/apps
     FIND_PACKAGE_ARGS
 )
@@ -41,19 +41,13 @@ endif()
 FetchContent_Declare(
     nuttx
     GIT_REPOSITORY https://github.com/apache/nuttx.git
-    GIT_TAG nuttx-12.7.0-RC0
+    GIT_TAG nuttx-12.7.0
     SOURCE_DIR ${CMAKE_BINARY_DIR}/nuttx
     FIND_PACKAGE_ARGS
 )
 FetchContent_GetProperties(nuttx)
 if(NOT nuttx_POPULATED)
     FetchContent_Populate(nuttx)
-endif()
-
-
-if(NOT "${nuttx_SOURCE_DIR}" STREQUAL "")
-    list(APPEND CMAKE_MODULE_PATH ${apps_SOURCE_DIR}/cmake)
-    list(APPEND CMAKE_MODULE_PATH ${nuttx_SOURCE_DIR}/cmake)
 endif()
 
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
