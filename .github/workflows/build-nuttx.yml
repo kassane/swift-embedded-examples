@@ -10,7 +10,7 @@ on:
     - cron:  '0 17 * * 1'
 
 jobs:
-  build-zephyr:
+  build-nuttx:
     runs-on: ubuntu-22.04
 
     strategy:
@@ -37,10 +37,15 @@ jobs:
           echo "PATH=$PATH" >> $GITHUB_ENV
           swiftc --version
 
-      - name: Install kconfig-frontends
+      - name: Install Build tools
         run: |
           sudo apt -y update
-          sudo apt -y install kconfig-frontends
+          sudo apt -y install \
+          bison flex gettext texinfo libncurses5-dev libncursesw5-dev \
+          gperf automake libtool pkg-config build-essential gperf genromfs \
+          libgmp-dev libmpc-dev libmpfr-dev libisl-dev binutils-dev libelf-dev \
+          libexpat-dev gcc-multilib g++-multilib u-boot-tools util-linux \
+          kconfig-frontends
       
       - name: Install RISC-V toolchain
         run: |
