@@ -11,13 +11,13 @@ on:
 
 jobs:
   build-nuttx:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
       matrix:
         example: [nuttx-riscv-blink]
-        swift: [swift-DEVELOPMENT-SNAPSHOT-2024-12-04-a]
+        swift: [swift-DEVELOPMENT-SNAPSHOT-2024-12-10-a]
 
     steps:
       - name: Checkout repo
@@ -30,12 +30,12 @@ jobs:
           ninjaVersion: latest
 
       - name: Install ${{ matrix.swift }}
-        run: |
-          wget -q https://download.swift.org/development/ubuntu2404/${{ matrix.swift }}/${{ matrix.swift }}-ubuntu24.04.tar.gz
-          tar xzf ${{ matrix.swift }}-ubuntu24.04.tar.gz
-          export PATH="$PATH:`pwd`/${{ matrix.swift }}-ubuntu24.04/usr/bin/"
-          echo "PATH=$PATH" >> $GITHUB_ENV
-          swiftc --version
+        run: swiftc --version
+          # wget -q https://download.swift.org/development/ubuntu2404/${{ matrix.swift }}/${{ matrix.swift }}-ubuntu24.04.tar.gz
+          # tar xzf ${{ matrix.swift }}-ubuntu24.04.tar.gz
+          # export PATH="$PATH:`pwd`/${{ matrix.swift }}-ubuntu24.04/usr/bin/"
+          # echo "PATH=$PATH" >> $GITHUB_ENV
+          # swiftc --version
 
       - name: Install Build tools
         run: |
