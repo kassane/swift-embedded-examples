@@ -54,10 +54,11 @@ jobs:
           | tar -C riscv-none-elf-gcc --strip-components 1 -xz
           export PATH="$PATH:`pwd`/riscv-none-elf-gcc/bin/"
           echo "PATH=$PATH" >> $GITHUB_ENV
+          riscv-none-elf-gcc --version
         
       - name: Config ${{ matrix.example }}
         working-directory: ${{ matrix.example }}
-        run: cmake -B build -GNinja -DBOARD_CONFIG=rv-virt:leds_swift
+        run: cmake -B build -GNinja -DBOARD_CONFIG=rv-virt:leds_swift -DENABLE_NUTTX_TRACE=ON
 
       - name: Build ${{ matrix.example }}
         working-directory: ${{ matrix.example }}
